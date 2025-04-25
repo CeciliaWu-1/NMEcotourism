@@ -1,0 +1,129 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>景點介紹 - 推廣北部都會區生態旅遊</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .attraction-btn {
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+      transition: transform 0.3s ease;
+    }
+    .attraction-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold hover:text-blue-200">推廣北部都會區生態旅遊</a>
+      <ul class="flex space-x-6">
+        <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
+        <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
+        <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
+        <li><a href="route.html" class="hover:text-blue-200">推薦路綫及交通資訊</a></li>
+        <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Attractions Section -->
+  <section id="attractions" class="py-20">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-left">景點介紹</h1>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- Attraction 1 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')">
+          景點 1
+        </a>
+        <!-- Attraction 2 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1519981593452-666cf05569a9')">
+          景點 2
+        </a>
+        <!-- Attraction 3 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0')">
+          景點 3
+        </a>
+        <!-- Attraction 4 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1472214103451-9374b1e1c4f3')">
+          景點 4
+        </a>
+        <!-- Attraction 5 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000')">
+          景點 5
+        </a>
+        <!-- Attraction 6 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1495567720989-cebdb147d8d5')">
+          景點 6
+        </a>
+        <!-- Attraction 7 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1508736376648-5f6d9600b688')">
+          景點 7
+        </a>
+        <!-- Attraction 8 -->
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f1f6d0d07')">
+          景點 8
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>By Cecilia WU & Charlotte CHOI from HKU MSc ENVM</p>
+    </div>
+  </footer>
+</body>
+</html>

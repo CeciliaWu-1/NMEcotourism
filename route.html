@@ -1,0 +1,188 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>推薦路綫及交通資訊 - 推廣北部都會區生態旅遊</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold hover:text-blue-200">推廣北部都會區生態旅遊</a>
+      <ul class="flex space-x-6">
+        <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
+        <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
+        <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
+        <li><a href="route.html" class="hover:text-blue-200">推薦路綫及交通資訊</a></li>
+        <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- Recommended Route and Transportation Section -->
+  <section id="route" class="py-20">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold mb-6 text-left">推薦路綫及交通資訊</h2>
+      <div class="text-lg max-w-3xl text-left">
+        <h3 class="text-xl font-semibold mb-2">推薦路綫</h3>
+        <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1m37XWONfpK-H8ICTwBlQVtQqrOnIfTI&ehbc=2E312F" width="640" height="480"></iframe>        <p class="mb-4">（路線長短: 4 小時 20 分，約17.5 公里)</p>
+        <h3 class="text-xl font-semibold mb-2">交通資訊</h3>
+        <p class="mb-4"><a href="https://www.hkemobility.gov.hk/tc/route-search/pt" target="_blank" class="text-blue-600 hover:underline">香港出行易</a></p>
+        
+        <h3 class="text-xl font-semibold mb-2">由上水站出發至上水圍</h3>
+        <h4 class="text-lg font-semibold mb-2">方法一：新界專綫小巴59A線</h4>
+        <p class="mb-4"><a href="https://hkbus.fandom.com/wiki/%E6%96%B0%E7%95%8C%E5%B0%88%E7%B6%AB%E5%B0%8F%E5%B7%B459A%E7%B7%9A" target="_blank" class="text-blue-600 hover:underline">新界專綫小巴59A線詳情</a></p>
+        <ol class="list-decimal pl-6 mb-4">
+          <li>於上水專線小巴總站上車</li>
+          <p class="mb-4">        <img src="1.png" alt="image1">          </p>
+          <li>於上水鄉總站（近上水鄉村公所）下車</li>
+          <p class="mb-4"> <img src="2.png" alt="image1"></p>
+          <li>下車後沿路直行</li>
+          <p class="mb-4"> <img src="3.png" alt="image1"></p>
+          <li>在廖樂亭前路口轉右</li>
+          <p class="mb-4"> <img src="4.png" alt="image1"></p>
+          <li>在廖樂亭前路口轉右後直再轉左（鄉公所方向）</li>
+          <p class="mb-4"> <img src="5.png" alt="image1"></p>
+          <li>轉左後直行（經過鄉公所）直至到達上水圍圍內村公廁</li>
+          <p class="mb-4"> <img src="6.png" alt="image1"></p>
+          <li>到達上水圍圍內村公廁後直行直至到達榕樹公園</li>
+          <p class="mb-4"> <img src="7.png" alt="image1"></p>
+          <li>在榕樹公園前路口右轉</li>
+          <p class="mb-4"> <img src="8.png" alt="image1"></p>
+          <li>右轉後直行</li>
+          <p class="mb-4"> <img src="9.png" alt="image1"></p>
+          <li>直行大概90米後到達目的地</li>
+          <p class="mb-4"> <img src="10.png" alt="image1"></p>
+        </ol>
+        
+        <h4 class="text-lg font-semibold mb-2">方法二：由上水站步行至上水圍 (約1.4公里, 需時大概17分鐘)</h4>
+        <ol class="list-decimal pl-6 mb-4">
+          <li>從上水站D1出口直行，過馬路到新豐路</li>
+          <p class="mb-4"><img src="11.png" alt="image1"></p>
+          <li>在新豐路一直向前直行約200米，直至到達有記駕駛學院後轉左至寶運路</li>
+          <p class="mb-4"><img src="12.png" alt="image1"></p>
+          <li>沿寶運路一直向前直行後，過馬路</li>
+          <p class="mb-4"><img src="13.png" alt="image1"></p>
+          <li>過馬路後左轉直行，繼續沿寶運路直行</li>
+          <p class="mb-4"><img src="14.png" alt="image1"></p>
+          <li>轉入第一個分岔口（於右邊）直行到東慶路</li>
+          <p class="mb-4"><img src="15.png" alt="image1"></p>
+          <li>向左轉直行</li>
+          <p class="mb-4"><img src="16.png" alt="image1"></p>
+          <li>直至到達59A上水鄉總站</li>
+          <p class="mb-4"><img src="17.png" alt="image1"></p>
+          <li>沿路直行</li>
+          <p class="mb-4"><img src="18.png" alt="image1"></p>
+          <li>在廖樂亭前路口轉右</li>
+          <p class="mb-4"><img src="19.png" alt="image1"></p>
+          <li>在廖樂亭前路口轉右後直再轉左（鄉公所方向）</li>
+          <p class="mb-4"><img src="20.png" alt="image1"></p>
+          <li>轉左後直行（經過鄉公所）直至到達上水圍圍內村公廁</li>
+          <p class="mb-4"><img src="21.png" alt="image1"></p>
+          <li>到達上水圍圍內村公廁後直行直至到達榕樹公園</li>
+          <p class="mb-4"><img src="22.png" alt="image1"></p>
+          <li>在榕樹公園前路口右轉</li>
+          <p class="mb-4"><img src="23.png" alt="image1"></p>
+          <li>右轉後直行</li>
+          <p class="mb-4"><img src="24.png" alt="image1"></p>
+          <li>直行大概90米後到達目的地</li>
+          <p class="mb-4"><img src="25.png" alt="image1"></p>
+        </ol>
+        
+        <h3 class="text-xl font-semibold mb-2">由河上鄉離開</h3>
+        <h4 class="text-lg font-semibold mb-2">方法一：乘搭小巴</h4>
+        <p class="mb-4">您可乘搭專綫小巴51K到上水站公共小巴總站，再轉乘其他交通工具。</p>
+        <p class="mb-4"><a href="https://www.16seats.net/chi/gmb/gn_51k.html" target="_blank" class="text-blue-600 hover:underline">專綫小巴51K詳情</a></p>
+        <p class="mb-2">上車位置：河上鄉鄉公所</p>
+        <p class="mb-4"><img src="26.png" alt="image1"></p>
+        <p class="mb-2">下車位置：上水站公共小巴總站</p>
+        <p class="mb-4"><img src="27.png" alt="image1"></p>
+        
+        <h4 class="text-lg font-semibold mb-2">方法二：乘搭的士</h4>
+
+        <h3 class="text-xl font-semibold mb-2">由落馬洲瞭望台離開</h3>
+        <h4 class="text-lg font-semibold mb-2">方法一：由落馬洲瞭望台步行3分鐘至下灣漁民新村乘搭75小巴 / B1巴士</h4>
+        <p class="mb-2">75小巴</p>
+        <p class="mb-4"><a href="https://www.16seats.net/chi/gmb/gn_75.html" target="_blank" class="text-blue-600 hover:underline">75小巴詳情</a></p>
+        <p class="mb-2">上車位置（下灣漁民新村站）（近安記士多）：</p>
+        <p class="mb-4"><img src="28.png" alt="image1"></p>
+        <p class="mb-2">B1巴士</p>
+        <p class="mb-4"><a href="https://search.kmb.hk/KMBWebSite/?action=routesearch&route=B1&lang=zh-hk" target="_blank" class="text-blue-600 hover:underline">B1巴士詳情</a></p>
+        <p class="mb-2">上車位置：</p>
+        <p class="mb-4"><img src="29.png" alt="image1"></p>
+        
+        <h4 class="text-lg font-semibold mb-2">方法二：乘搭75小巴 / 步行（約15分鐘，1.1公里）至新田公共運輸交匯處轉乘其他交通工具</h4>
+        <p class="mb-2">75小巴</p>
+        <p class="mb-4"><a href="https://www.16seats.net/chi/gmb/gn_75.html" target="_blank" class="text-blue-600 hover:underline">75小巴詳情</a></p>
+        <p class="mb-2">上車位置（下灣漁民新村站）（近安記士多）：</p>
+        <p class="mb-4"><img src="30.png" alt="image1"></p>
+        <p class="mb-2">步行路線：</p>
+        <ol class="list-decimal pl-6 mb-4">
+          <li>從落馬洲瞭望台離開後，經落馬洲徑到落馬洲路</li>
+          <p class="mb-4"><img src="31.png" alt="image1"></p>
+          <li>沿落馬洲路直行800米</li>
+          <p class="mb-4"><img src="32.png" alt="image1"></p>
+          <li>右轉進入青山公路洲頭段</li>
+          <p class="mb-4"><img src="33.png" alt="image1"></p>
+          <li>到達新田公共運輸交匯處</li>
+          <p class="mb-4"><img src="34.png" alt="image1"></p>
+        </ol>
+        <p class="mb-2">新田公共運輸交匯處路線資料：</p>
+        <p class="mb-4"><a href="https://hkbus.fandom.com/wiki/%E8%90%BD%E9%A6%AC%E6%B4%B2_(%E6%96%B0%E7%94%B0)_%E5%85%AC%E5%85%B1%E9%81%8B%E8%BC%B8%E4%BA%A4%E5%8C%AF%E8%99%95" target="_blank" class="text-blue-600 hover:underline">新田公共運輸交匯處詳情</a></p>
+        
+        <h4 class="text-lg font-semibold mb-2">方法三：乘搭的士</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>By Cecilia WU & Charlotte CHOI from HKU MSc ENVM</p>
+    </div>
+  </footer>
+</body>
+</html>

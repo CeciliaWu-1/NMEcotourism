@@ -1,0 +1,100 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關於我們 - 推廣北部都會區生態旅遊</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold hover:text-blue-200">推廣北部都會區生態旅遊</a>
+      <ul class="flex space-x-6">
+        <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
+        <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
+        <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
+        <li><a href="route.html" class="hover:text-blue-200">推薦路綫及交通資訊</a></li>
+        <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- About Us Section -->
+  <section id="about" class="py-20">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold mb-6 text-left">關於我們</h2>
+      <div class="text-lg max-w-3xl text-left">
+        <h3 class="text-xl font-semibold mb-2">關於我們</h3>
+        <p class="mb-4">我們是香港大學環境管理理學碩士課程的學生，正在組織一個名為「推廣北部都會區生態旅遊」的計畫。我們的目標之一，是為參與者提供導覽服務，讓他們體驗新的生態旅遊路線並收集回饋。收集到的見解將幫助我們提出策略建議，解決該地區現有的缺陷，並增強該地區的旅遊吸引力。</p>
+        
+        <h3 class="text-xl font-semibold mb-2">專案目標</h3>
+        <p class="mb-4">過去幾年，乘客的出行習慣和偏好發生了多方面的變化。他們更喜歡深度的體驗，也更重視永續性。因此，有必要探索發展香港具有旅遊潛力的綠色景點。</p>
+        <p class="mb-4">本研究為配合政府所訂北部都會區藍綠康樂旅遊生態圈的發展計畫目標，將探討區域內生態旅遊產業潛力，推動北部都會區的生態旅遊，並為其提供策略建議，以解決北部都會區旅遊產業及相關配套的現存不足，使之成為知名旅遊勝地。最終旨在於香港推廣生態旅遊理念及加強綠色旅遊產品的推廣。</p>
+        <p class="mt-6">在 Instagram 上關注我們: <a href="https://instagram.com/nm_ecotourism" target="_blank" class="text-blue-600 hover:underline">nm_ecotourism</a></p>
+        電子郵件: <a href="mailto:nm.ecotour@gmail.com" class="text-blue-600 hover:underline">nm.ecotour@gmail.com</a></p>
+
+
+        <h3 class="text-xl font-semibold mb-2">About Us</h3>
+        <p class="mb-4">We are students from the Hong Kong University Master of Science in Environmental Management program, and we are organizing a project titled "Promoting Eco-tourism in the Northern Metropolis." We aim to provide guided tours for participants to experience the new eco-tour route and gather feedback. The insights collected will help us offer strategic recommendations to address the existing shortcomings of the area, also enhance the area's tourism appeal.</p>
+        
+        <h3 class="text-xl font-semibold mb-2">Project Aims</h3>
+        <p class="mb-4">In the past few years, passengers' travel habits and preferences have changed in many aspects. They prefer in-depth experiences and are more aware of sustainability. Therefore, it is necessary to explore the development of green attractions in Hong Kong that have tourism potential.</p>
+        <p class="mb-4">To align with the goals of the development plan for the Northern Metropolis Blue and Green Recreation, Tourism, and Conservation Circle established by the government, this project aims to explore the potential of the eco-tourism industry within the region, promote ecotourism in the Northern Metropolis, and also offering strategic recommendations to address the existing shortcomings of the area and turn it as a well-known tourism destination. Eventually, aims to promote the concept of ecotourism in Hong Kong and strengthen the promotion of green tourism products.</p>
+        
+        <p class="mt-6">Follow us on Instagram: <a href="https://instagram.com/nm_ecotourism" target="_blank" class="text-blue-600 hover:underline">nm_ecotourism</a></p>
+        E-Mail: <a href="mailto:nm.ecotour@gmail.com" class="text-blue-600 hover:underline">nm.ecotour@gmail.com</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>By Cecilia WU & Charlotte CHOI from HKU MSc ENVM</p>
+    </div>
+  </footer>
+</body>
+</html>
