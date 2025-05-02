@@ -1,71 +1,57 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="關於我們 - 推廣北部都會區生態旅遊">
+  <meta name="keywords" content="北部都會區, 生態旅遊, 可持續旅遊, 香港旅遊">
+  <link rel="icon" href="img/LOGO.ico" type="image/x-icon">
   <title>關於我們 - 推廣北部都會區生態旅遊</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      transition-delay: 0s; /* No delay when showing */
+    }
+    .group:hover .dropdown-menu,
+    .dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 0.3s; /* Delay when hiding */
+    }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans">
-
- <!-- Navigation Bar -->
- <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md">
-  <div class="container mx-auto flex justify-between items-center">
-    <a href="index.html">
-      <img src="img/logo.png" alt="NM Ecotourism Logo" class="h-10">
-    <span class="text-2xl font-bold hover:text-blue-200">推廣北部都會區生態旅遊</span>
+<body class="bg-gray-100 font-sans flex flex-col min-h-screen">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md" role="navigation" aria-label="Main navigation">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="flex items-center">
+        <img src="img/LOGO.png" alt="NM Ecotourism Logo" class="h-10">
+        <span class="text-2xl font-bold hover:text-blue-200 ml-2">推廣北部都會區生態旅遊</span>
       </a>
-      <ul class="flex space-x-6">
+      <button class="md:hidden" onclick="toggleMenu()">☰</button>
+      <ul class="hidden md:flex space-x-6" id="menu">
         <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
         <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
         <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
-        <li><a href="route.html" class="hover:text-blue-200">推薦路綫及交通資訊</a></li>
+        <li>
+          <div class="relative group" role="menu" aria-haspopup="true">
+            <a href="route.html" class="hover:text-blue-200 dropdown-toggle" aria-expanded="false">推薦路綫及交通資訊</a>
+            <div class="dropdown-menu absolute bg-blue-500 text-white rounded-lg mt-2 z-10">
+              <a href="depart-from-sheung-shui.html" class="block px-4 py-2 hover:bg-blue-700">由上水站出發至上水圍</a>
+              <a href="leave-from-ho-sheung-heung.html" class="block px-4 py-2 hover:bg-blue-700">由河上鄉離開</a>
+              <a href="leave-from-lok-ma-chau.html" class="block px-4 py-2 hover:bg-blue-700">由落馬洲瞭望台離開</a>
+            </div>
+          </div>
+        </li>
         <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
       </ul>
     </div>
   </nav>
-
-
 
   <!-- About Us Section -->
   <section id="about" class="py-20">
