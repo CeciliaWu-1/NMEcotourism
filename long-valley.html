@@ -1,0 +1,192 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="塱原 - 推廣北部都會區生態旅遊">
+  <meta name="keywords" content="塱原, 北部都會區, 生態旅遊, 香港旅遊, 濕地, 鳥類, 保育">
+  <link rel="icon" href="img/LOGO.ico" type="image/x-icon">
+  <title>塱原 - 推廣北部都會區生態旅遊</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      transition-delay: 0s;
+    }
+    .group:hover .dropdown-menu,
+    .dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 0.3s;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans flex flex-col min-h-screen">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md" role="navigation" aria-label="Main navigation">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="flex items-center">
+        <img src="img/LOGO.png" alt="NM Ecotourism Logo" class="h-10">
+        <span class="text-2xl font-bold hover:text-blue-200 ml-2">推廣北部都會區生態旅遊</span>
+      </a>
+      <button class="md:hidden" onclick="toggleMenu()">☰</button>
+      <ul class="hidden md:flex space-x-6" id="menu">
+        <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
+        <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
+        <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
+        <li>
+          <div class="relative group" role="menu" aria-haspopup="true">
+            <a href="route.html" class="hover:text-blue-200 dropdown-toggle" aria-expanded="false">推薦路綫及交通資訊</a>
+            <div class="dropdown-menu absolute bg-blue-500 text-white rounded-lg mt-2 z-10">
+              <a href="depart-from-sheung-shui.html" class="block px-4 py-2 hover:bg-blue-700">由上水站出發至上水圍</a>
+              <a href="leave-from-ho-sheung-heung.html" class="block px-4 py-2 hover:bg-blue-700">由河上鄉離開</a>
+              <a href="leave-from-lok-ma-chau.html" class="block px-4 py-2 hover:bg-blue-700">由落馬洲瞭望台離開</a>
+            </div>
+          </div>
+        </li>
+        <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content: 塱原 -->
+  <section id="long-valley" class="flex-1 py-10">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-left">塱原</h1>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Left Column: Image Gallery -->
+        <div class="md:col-span-1">
+          <img src="img/long-valley-wetland.jpg" alt="塱原濕地" class="rounded-lg shadow-lg mb-4">
+          <img src="img/long-valley-bird.jpg" alt="塱原鳥類" class="rounded-lg shadow-lg">
+        </div>
+        <!-- Right Column: Text Content -->
+        <div class="md:col-span-2">
+          <h2 class="text-2xl font-semibold mb-4">概況</h2>
+          <p class="mb-4">塱原位於上水上遊河與城屋河之間，是香港最大且保存最完整的淡水濕地，佔地約25公頃。當地人稱之為「大碑」，其起源不詳，但長期以來一直是農業和後來賞鳥的場所。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">生態重要性</h2>
+          <p class="mb-4">塱原支援超過550種鳥類，其中46%為遷徙途中的候鳥，25%為冬季候鳥，使其成為10月至12月遷徙季節的重要停歇地。該濕地記錄了近300種鳥類，包括14種全球瀕危物種，如黃胸鵐、黑翅長腳鷸（2021年首次繁殖）、栗耳鵐（2021年首次記錄）和澳洲鷸（2023年首次記錄）。濕地由400多塊農地組成，包括濕耕地、淺塘、稻田和旱耕地，促進了高度的生物多樣性。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">保育工作</h2>
+          <p class="mb-4">為抵銷古洞北/粉嶺北新發展區造成的5.8公頃濕地損失，政府已將37公頃的塱原指定為塱原自然公園，預計於2024年11月開放。該公園由土木工程拓展署（CEDD）建設後交由漁農自然護理署（AFCD）管理，包括：</p>
+          <ul class="list-disc list-inside mb-4">
+            <li><strong>生態區</strong>：21公頃，用於核心保育。</li>
+            <li><strong>農業區</strong>：11公頃，用於環保農業，農民需提交計劃，盡量減少使用非環保農藥。</li>
+            <li><strong>遊客區</strong>：5公頃，設有塱原自然中心、賞鳥屋、濕地廣場、棧道和休息亭。</li>
+          </ul>
+          <p class="mb-4">其他特點包括8公頃的修復濕地和1.9公里的灌溉渠道。自2019年底以來，秋冬季的鳥類數量增加了20%至40%，特別是黑翅長腳鷸等物種。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">遊客資訊</h2>
+          <p class="mb-4">公園將免費對公眾開放，生態區和農業區的進入受限制，以減少干擾。教育活動包括導賞團、野生動物觀察、農業體驗、主題展覽和互動遊戲。2024年11月的開幕慶祝活動為期兩天，包括藝術工作坊、遊戲、導賞團、農墟和音樂表演，並提供免費穿梭巴士往返附近的地鐵站。AFCD的主題網站將提供生態價值、歷史、交通和活動網上預約的詳細資訊。</p>
+          
+          <table class="table-auto w-full bg-white shadow-md rounded-lg mt-6">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-4 py-2">方面</th>
+                <th class="px-4 py-2">詳情</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border px-4 py-2">面積</td>
+                <td class="border px-4 py-2">25公頃（自然公園：37公頃）</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">鳥類物種</td>
+                <td class="border px-4 py-2">超過300種，包括14種全球瀕危物種</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">主要物種</td>
+                <td class="border px-4 py-2">黃胸鵐、黑翅長腳鷸、栗耳鵐</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">開放日期</td>
+                <td class="border px-4 py-2">2024年11月</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">遊客設施</td>
+                <td class="border px-4 py-2">自然中心、賞鳥屋、濕地廣場、棧道</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>By Cecilia WU & Charlotte CHOI from HKU MSc ENVM</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('hidden');
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.remove('active');
+      });
+      document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    }
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          const menu = toggle.nextElementSibling;
+          const isActive = menu.classList.contains('active');
+          document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+          document.querySelectorAll('.dropdown-toggle').forEach(t => t.setAttribute('aria-expanded', 'false'));
+          menu.classList.toggle('active', !isActive);
+          toggle.setAttribute('aria-expanded', !isActive);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

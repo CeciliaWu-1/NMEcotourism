@@ -1,0 +1,183 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width藏, initial-scale=1.0">
+  <meta name="description" content="河上鄉 - 推廣北部都會區生態旅遊">
+  <meta name="keywords" content="河上鄉, 北部都會區, 生態旅遊, 香港旅遊, 客家文化, 侯氏, 圍村">
+  <link rel="icon" href="img/LOGO.ico" type="image/x-icon">
+  <title>河上鄉 - 推廣北部都會區生態旅遊</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      transition-delay: 0s;
+    }
+    .group:hover .dropdown-menu,
+    .dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 0.3s;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans flex flex-col min-h-screen">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md" role="navigation" aria-label="Main navigation">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="flex items-center">
+        <img src="img/LOGO.png" alt="NM Ecotourism Logo" class="h-10">
+        <span class="text-2xl font-bold hover:text-blue-200 ml-2">推廣北部都會區生態旅遊</span>
+      </a>
+      <button class="md:hidden" onclick="toggleMenu()">☰</button>
+      <ul class="hidden md:flex space-x-6" id="menu">
+        <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
+        <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
+        <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
+        <li>
+          <div class="relative group" role="menu" aria-haspopup="true">
+            <a href="route.html" class="hover:text-blue-200 dropdown-toggle" aria-expanded="false">推薦路綫及交通資訊</a>
+            <div class="dropdown-menu absolute bg-blue-500 text-white rounded-lg mt-2 z-10">
+              <a href="depart-from-sheung-shui.html" class="block px-4 py-2 hover:bg-blue-700">由上水站出發至上水圍</a>
+              <a href="leave-from-ho-sheung-heung.html" class="block px-4 py-2 hover:bg-blue-700">由河上鄉離開</a>
+              <a href="leave-from-lok-ma-chau.html" class="block px-4 py-2 hover:bg-blue-700">由落馬洲瞭望台離開</a>
+            </div>
+          </div>
+        </li>
+        <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content: 河上鄉 -->
+  <section id="ho-sheung-heung" class="flex-1 py-10">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-left">河上鄉</h1>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Left Column: Image Gallery -->
+        <div class="md:col-span-1">
+          <img src="img/ho-sheung-heung-ancestral-hall.jpg" alt="侯顧石祠堂" class="rounded-lg shadow-lg mb-4">
+          <img src="img/ho-sheung-heung-feng-shui-woodland.jpg" alt="河上鄉風水林" class="rounded-lg shadow-lg">
+        </div>
+        <!-- Right Column: Text Content -->
+        <div class="md:col-span-2">
+          <h2 class="text-2xl font-semibold mb-4">概況</h2>
+          <p class="mb-4">河上鄉位於香港北區上水，是一個受新界小型屋宇政策認可的村落，包括四個村莊：南邊圍、北邊圍、中心村和新村（新村）。它屬於上水鄉村選區，由侯福達代表。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">文化遺產</h2>
+          <p class="mb-4">河上鄉由新界五大氏族之一的侯氏於南宋末年（12世紀末）定居，見證了客家文化的傳承。主要地標包括建於明朝、1762年翻修的侯顧石祠堂，採用傳統三進兩院建築風格，飾以紅砂岩和精緻木雕，雕刻內容包括《牛郎織女》和《蘇武牧羊》等故事。洪神廟和拜風廟是重要的文化地點，後者因政府徵地於1937年遷址。</p>
+          <p class="mb-4">每年農曆二月十三日的洪聖節是重大活動，節慶包括舞獅、龍舞、粵劇表演、「花炮」比賽和「千人盆菜宴」。節日表演包括「八仙賀壽」和「天女送子」等傳統劇目。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">生態特色</h2>
+          <p class="mb-4">村內的風水林幾乎未受破壞，擁有茂密的闊葉常綠樹冠（高8至18米），包括樟樹、楠木和細葉榕，支持蒙面棕櫚貓和豹貓等野生動物。當地農業由保育協會支持，種植水芹、茨菇和荸薺等作物，河上鄉水芹項目推動可持續農業發展。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">遊客吸引力</h2>
+          <p class="mb-4">河上鄉提供豐富的文化體驗，包括歷史建築和充滿活力的節慶活動，結合附近風水林和農場的生態探索，吸引遊客深入了解客家文化與自然環境。</p>
+          
+          <table class="table-auto w-full bg-white shadow-md rounded-lg mt-6">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-4 py-2">方面</th>
+                <th class="px-4 py-2">詳情</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border px-4 py-2">村莊</td>
+                <td class="border px-4 py-2">南邊圍、北邊圍、中心村、新村</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">主要地標</td>
+                <td class="border px-4 py-2">侯顧石祠堂（明朝，1762年翻修）</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">主要節慶</td>
+                <td class="border px-4 py-2">洪聖節（農曆二月十三日）</td>
+              </tr>
+              <tr>
+                <td class="border px-4 py-2">生態特色</td>
+                <td class="border px-4 py-2">風水林，支援蒙面棕櫚貓、豹貓</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>By Cecilia WU & Charlotte CHOI from HKU MSc ENVM</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('hidden');
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.remove('active');
+      });
+      document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    }
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          const menu = toggle.nextElementSibling;
+          const isActive = menu.classList.contains('active');
+          document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+          document.querySelectorAll('.dropdown-toggle').forEach(t => t.setAttribute('aria-expanded', 'false'));
+          menu.classList.toggle('active', !isActive);
+          toggle.setAttribute('aria-expanded', !isActive);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
