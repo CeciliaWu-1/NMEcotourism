@@ -14,14 +14,51 @@
       visibility: hidden;
       transform: translateY(-10px);
       transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-      transition-delay: 0s; /* No delay when showing */
+      transition-delay: 0s;
     }
     .group:hover .dropdown-menu,
     .dropdown-menu.active {
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
-      transition-delay: 0.3s; /* Delay when hiding */
+      transition-delay: 0.3s;
+    }
+    .attraction-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 12rem; /* h-48 */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      font-size: 1.25rem; /* text-xl */
+      font-weight: bold;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      position: relative;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .attraction-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
+      z-index: 0;
+    }
+    .attraction-btn:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    .attraction-btn:focus {
+      outline: 2px solid white;
+      outline-offset: 2px;
+    }
+    .attraction-btn span {
+      position: relative;
+      z-index: 1; /* Ensure text is above overlay */
     }
   </style>
 </head>
@@ -52,54 +89,77 @@
       </ul>
     </div>
   </nav>
-
-
   <!-- Attractions Section -->
-  <section id="attractions" class="py-20">
+  <section id="attractions" class="flex-1 py-10">
     <div class="container mx-auto">
       <h1 class="text-3xl font-bold mb-6 text-left">景點介紹</h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <!-- Attraction 1 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')">
-          景點 1
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')" aria-label="上水圍">
+          <span>上水圍</span>
         </a>
         <!-- Attraction 2 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1519981593452-666cf05569a9')">
-          景點 2
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1519981593452-666cf05569a9')" aria-label="松柏塱">
+          <span>松柏塱</span>
         </a>
         <!-- Attraction 3 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0')">
-          景點 3
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0')" aria-label="塱原">
+          <span>塱原</span>
         </a>
         <!-- Attraction 4 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1472214103451-9374b1e1c4f3')">
-          景點 4
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1472214103451-9374b1e1c4f3')" aria-label="河上鄉">
+          <span>河上鄉</span>
         </a>
         <!-- Attraction 5 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000')">
-          景點 5
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000')" aria-label="大石磨山">
+          <span>大石磨山</span>
         </a>
         <!-- Attraction 6 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1495567720989-cebdb147d8d5')">
-          景點 6
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1495567720989-cebdb147d8d5')" aria-label="蠔殼圍">
+          <span>蠔殼圍</span>
         </a>
         <!-- Attraction 7 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1508736376648-5f6d9600b688')">
-          景點 7
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1508736376648-5f6d9600b688')" aria-label="落馬洲村">
+          <span>落馬洲村</span>
         </a>
         <!-- Attraction 8 -->
-        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f1f6d0d07')">
-          景點 8
+        <a href="#" class="attraction-btn rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f1f6d0d07')" aria-label="落馬洲瞭望台">
+          <span>落馬洲瞭望台</span>
         </a>
       </div>
     </div>
   </section>
-
   <!-- Footer -->
   <footer class="bg-blue-600 text-white py-4">
     <div class="container mx-auto text-center">
       <p>By Cecilia WU & Charlotte CHOI from HKU MSc ENVM</p>
     </div>
   </footer>
+  <script>
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('hidden');
+      // Close any open dropdowns when toggling the main menu
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.remove('active');
+      });
+      document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    }
+    // Add click event for dropdown toggle on mobile
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) { // Only on mobile (md breakpoint)
+          e.preventDefault();
+          const menu = toggle.nextElementSibling;
+          const isActive = menu.classList.contains('active');
+          document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+          document.querySelectorAll('.dropdown-toggle').forEach(t => t.setAttribute('aria-expanded', 'false'));
+          menu.classList.toggle('active', !isActive);
+          toggle.setAttribute('aria-expanded', !isActive);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
