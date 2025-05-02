@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="探索北部都會區的生態旅遊，體驗可持續的自然與文化之旅。">
   <meta name="keywords" content="北部都會區, 生態旅遊, 可持續旅遊, 香港旅遊">
-  <link rel="icon" href="img/LOGO.ico" type="image/x-icon">
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
   <title>推廣北部都會區生態旅遊</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -20,6 +20,20 @@
       background: rgba(0, 0, 0, 0.5);
       padding: 2rem;
       border-radius: 0.5rem;
+    }
+    .dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      transition-delay: 0s; /* No delay when showing */
+    }
+    .group:hover .dropdown-menu,
+    .dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 0.3s; /* Delay when hiding */
     }
   </style>
 </head>
@@ -36,7 +50,16 @@
         <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
         <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
         <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
-        <li><a href="route.html" class="hover:text-blue-200">推薦路綫及交通資訊</a></li>
+        <li>
+          <div class="relative group" role="menu" aria-haspopup="true">
+            <a href="route.html" class="hover:text-blue-200 dropdown-toggle" aria-expanded="false">推薦路綫及交通資訊</a>
+            <div class="dropdown-menu absolute bg-blue-500 text-white rounded-lg mt-2 z-10">
+              <a href="depart-from-sheung-shui.html" class="block px-4 py-2 hover:bg-blue-700">由上水站出發至上水圍</a>
+              <a href="leave-from-ho-sheung-heung.html" class="block px-4 py-2 hover:bg-blue-700">由河上鄉離開</a>
+              <a href="leave-from-lok-ma-chau.html" class="block px-4 py-2 hover:bg-blue-700">由落馬洲瞭望台離開</a>
+            </div>
+          </div>
+        </li>
         <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
       </ul>
     </div>
@@ -61,7 +84,31 @@
   <script>
     function toggleMenu() {
       document.getElementById('menu').classList.toggle('hidden');
+      // Close any open dropdowns when toggling the main menu
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.remove('active');
+      });
+      document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.setAttribute('aria-expanded', 'false');
+      });
     }
+
+    // Add click event for dropdown toggle on mobile
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) { // Only on mobile (md breakpoint)
+          e.preventDefault(); // Prevent navigating to route.html
+          const menu = toggle.nextElementSibling;
+          const isActive = menu.classList.contains('active');
+          // Close all other dropdowns
+          document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+          document.querySelectorAll('.dropdown-toggle').forEach(t => t.setAttribute('aria-expanded', 'false'));
+          // Toggle current dropdown
+          menu.classList.toggle('active', !isActive);
+          toggle.setAttribute('aria-expanded', !isActive);
+        }
+      });
+    });
   </script>
 </body>
 </html>
