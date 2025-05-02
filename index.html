@@ -14,16 +14,16 @@
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      background-color: #1e40af; /* Fallback color */
+      background-color: #1e40af;
     }
     .overlay {
-      background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+      background: rgba(0, 0, 0, 0.5);
       padding: 2rem;
       border-radius: 0.5rem;
     }
   </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans flex flex-col min-h-screen">
   <!-- Navigation Bar -->
   <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md" role="navigation" aria-label="Main navigation">
     <div class="container mx-auto flex justify-between items-center">
@@ -42,8 +42,8 @@
     </div>
   </nav>
 
-  <!-- Hero Section with Overlay -->
-  <section id="home" class="min-h-screen flex items-center bg-blue-500 text-white">
+  <!-- Hero Section -->
+  <section id="home" class="flex-1 flex items-center bg-blue-500 text-white">
     <div class="container mx-auto text-center overlay">
       <h1 class="text-4xl font-bold mb-4">歡迎體驗北部都會區生態旅遊</h1>
       <p class="text-lg mb-6">我們致力於推廣可持續旅遊，探索北部都會區的自然與文化之美。</p>
