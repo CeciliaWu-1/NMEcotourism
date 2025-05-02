@@ -1,0 +1,165 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="上水圍 - 推廣北部都會區生態旅遊">
+  <meta name="keywords" content="上水圍, 北部都會區, 生態旅遊, 香港旅遊, 廖氏, 圍村, 客家文化">
+  <link rel="icon" href="img/LOGO.ico" type="image/x-icon">
+  <title>上水圍 - 推廣北部都會區生態旅遊</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      transition-delay: 0s;
+    }
+    .group:hover .dropdown-menu,
+    .dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 0.3s;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans flex flex-col min-h-screen">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 sticky top-0 shadow-md" role="navigation" aria-label="Main navigation">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="flex items-center">
+        <img src="img/LOGO.png" alt="NM Ecotourism Logo" class="h-10">
+        <span class="text-2xl font-bold hover:text-blue-200 ml-2">推廣北部都會區生態旅遊</span>
+      </a>
+      <button class="md:hidden" onclick="toggleMenu()">☰</button>
+      <ul class="hidden md:flex space-x-6" id="menu">
+        <li><a href="index.html" class="hover:text-blue-200">首頁</a></li>
+        <li><a href="about.html" class="hover:text-blue-200">關於我們</a></li>
+        <li><a href="tour.html" class="hover:text-blue-200">生態文化旅遊導賞團</a></li>
+        <li>
+          <div class="relative group" role="menu" aria-haspopup="true">
+            <a href="route.html" class="hover:text-blue-200 dropdown-toggle" aria-expanded="false">推薦路綫及交通資訊</a>
+            <div class="dropdown-menu absolute bg-blue-500 text-white rounded-lg mt-2 z-10">
+              <a href="depart-from-sheung-shui.html" class="block px-4 py-2 hover:bg-blue-700">由上水站出發至上水圍</a>
+              <a href="leave-from-ho-sheung-heung.html" class="block px-4 py-2 hover:bg-blue-700">由河上鄉離開</a>
+              <a href="leave-from-lok-ma-chau.html" class="block px-4 py-2 hover:bg-blue-700">由落馬洲瞭望台離開</a>
+            </div>
+          </div>
+        </li>
+        <li><a href="attractions.html" class="hover:text-blue-200">景點介紹</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content: 上水圍 -->
+  <section id="sheung-shui-wai" class="flex-1 py-10">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-left">上水圍</h1>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Left Column: Image Gallery -->
+        <div class="md:col-span-1">
+          <img src="img/sheung-shui-wai-wall.jpg" alt="上水圍圍牆與護河" class="rounded-lg shadow-lg mb-4">
+          <img src="img/liu-man-shek-tong.jpeg" alt="廖萬石堂外觀" class="rounded-lg shadow-lg">
+        </div>
+        <!-- Right Column: Text Content -->
+        <div class="md:col-span-2">
+          <h2 class="text-2xl font-semibold mb-4">簡介</h2>
+          <p class="mb-4">上水圍（又稱上水鄉）位於香港北部都會區的河套平原上，坐落於梧桐河與石上河之間。因其北面有「雙魚河」，古時與粉嶺一帶合稱「雙魚市」。由於圍內村位於梧桐河之上，廖氏族人稱此地為「上水鄉」，名稱於明末清初確立，並見於1864年的《廣東圖》。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">歷史與文化</h2>
+          <p class="mb-4">上水圍的歷史始於明末清初，廖氏族人於1646年建成具有圍牆與護河的圍內村，以防禦盜匪。圍內村分為四斗：長房居北斗，二房居東斗與西斗，三房居南斗。後因人口增長，圍外陸續建成八村，合稱「上水鄉」。如今，「上水圍」一名深入人心，常被用來泛指整個上水鄉地區。</p>
+          <p class="mb-4">廖氏源於河南，相傳為顓頊帝後裔，元代中葉（1271-1368年）從福建南遷至廣東，開基祖廖仲傑最終定居上水雙魚河。族人自稱客家人，現散居嶺下、小坑、福田等地，圍內村則為其根源地。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">建築特色</h2>
+          <p class="mb-4">圍內村的圍牆與護河建於1646年，結構嚴謹，是新界少數保留原有護河的圍村。村內的廖萬石堂建於1751年，是香港保存最完好的客家宗祠之一，1985年被列為法定古蹟，內有珍貴文物展示家族歷史。此外，顯承堂和明德堂兩間分祠亦為族人祭祀與集會的重要場所。</p>
+          
+          <h2 class="text-2xl font-semibold mb-4">景點亮點</h2>
+          <p class="mb-4">上水圍融合了歷史建築與自然景觀，是探索客家文化與生態旅遊的絕佳地點。遊客可漫步圍村，感受傳統與自然的和諧共存。</p>
+          
+          <div class="bg-green-100 p-4 rounded-lg">
+            <h3 class="text-xl font-semibold mb-2">可持續旅遊提示</h3>
+            <ul class="list-disc list-inside">
+              <li>請尊重當地文化，避免干擾居民生活。</li>
+              <li>保持環境整潔，不亂扔垃圾。</li>
+              <li>支持本地手工藝品和農產品，促進社區經濟。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>By Cecilia WU & Charlotte CHOI from HKU MSc ENVM</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('hidden');
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.remove('active');
+      });
+      document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    }
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          const menu = toggle.nextElementSibling;
+          const isActive = menu.classList.contains('active');
+          document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+          document.querySelectorAll('.dropdown-toggle').forEach(t => t.setAttribute('aria-expanded', 'false'));
+          menu.classList.toggle('active', !isActive);
+          toggle.setAttribute('aria-expanded', !isActive);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
